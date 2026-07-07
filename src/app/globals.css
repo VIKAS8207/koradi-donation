@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Your custom base styles */
+body {
+  background-color: #ffff;
+  color: #ffffff;
+}
