@@ -37,7 +37,7 @@ export default function RootLayout({
           <div 
             className="absolute inset-[-50%] opacity-[0.025] pointer-events-none mix-blend-multiply animate-[spin_240s_linear_infinite]" 
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 80c-22.091 0-40-17.909-40-40S17.909 0 40 0s40 17.909 40 40-17.909 40-40 40zm0-2c20.987 0 38-17.013 38-38S60.987 2 40 2 2 19.013 2 40s17.013 38 38 38zm0-18c-11.046 0-20-8.954-20-20s8.954-20 20-20 20 8.954 20 20-8.954 20-20 20zm0-2c9.941 0 18-8.059 18-18s-8.059-18-18-18-18 8.059-18 18 8.059 18 18 18z' fill='%2378350f' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 80c-22.091 0-40-17.909-40-40S17.909 0 40 0s40 17.909 40 40-17.909 40-40 40zm0-2c20.987 0 38-17.013 38-38S60.987 2 40 2 2 19.013 2 40s17.013 38 38 38zm0-18c-11.046 0-20-8.954-20-20s8.954-20 20-20 20 8.954 20 20-8.954 20-20 20zm0-2c9.941 0 18-8.059 18-18s-8.059-18-18-18-18 8.059-18 18 8.059 18 18 18z' fill='%23451a03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
               backgroundSize: '80px 80px',
               backgroundPosition: 'center center'
             }}

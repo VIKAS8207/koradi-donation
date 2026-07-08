@@ -27,14 +27,14 @@ const CustomDropdown = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selectedLabel = options.find(opt => opt.value === value)?.label || "Select a cause";
+  const selectedLabel = options.find(opt => opt.value === value)?.label || "Select an option";
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-2.5 rounded-lg bg-white/50 hover:bg-white/80 text-amber-950 font-medium transition-all shadow-sm outline-none flex justify-between items-center border border-amber-900/10 focus:ring-2 focus:ring-orange-500"
+        className="w-full px-4 py-2.5 rounded-lg bg-white/60 hover:bg-white/80 text-amber-950 font-medium transition-all shadow-sm outline-none flex justify-between items-center border border-amber-900/20 focus:ring-2 focus:ring-orange-500"
       >
         <span className={value ? "text-amber-950" : "text-amber-900/60"}>
           {selectedLabel}
@@ -54,7 +54,6 @@ const CustomDropdown = ({
 
       {isOpen && (
         <div className="absolute z-50 w-full mt-2 bg-[#fffcf5] rounded-lg shadow-2xl border border-amber-900/10">
-          {/* CHANGE 1: Custom Scrollbar injected directly via Tailwind arbitrary variants */}
           <ul className="max-h-60 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-amber-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-amber-400">
             {options.map((option) => (
               <li
@@ -81,6 +80,7 @@ const CustomDropdown = ({
 export default function Home() {
   const [cause, setCause] = useState("");
   const [amount, setAmount] = useState<string | number>("");
+  const [selectedState, setSelectedState] = useState(""); // New state for the Indian State
 
   const causeOptions = [
     { value: "General Donation", label: "General Donation" },
@@ -91,6 +91,38 @@ export default function Home() {
     { value: "OLD AGE HOME", label: "Old Age Home" },
     { value: "YOGMMEDITATON AND NATUROPATHY CENTRE", label: "Yoga, Meditation and Naturopathy Centre" },
     { value: "Goshala", label: "Goshala" },
+  ];
+
+  // List of all 28 Indian States
+  const indiaStatesOptions = [
+    { value: "Andhra Pradesh", label: "Andhra Pradesh" },
+    { value: "Arunachal Pradesh", label: "Arunachal Pradesh" },
+    { value: "Assam", label: "Assam" },
+    { value: "Bihar", label: "Bihar" },
+    { value: "Chhattisgarh", label: "Chhattisgarh" },
+    { value: "Goa", label: "Goa" },
+    { value: "Gujarat", label: "Gujarat" },
+    { value: "Haryana", label: "Haryana" },
+    { value: "Himachal Pradesh", label: "Himachal Pradesh" },
+    { value: "Jharkhand", label: "Jharkhand" },
+    { value: "Karnataka", label: "Karnataka" },
+    { value: "Kerala", label: "Kerala" },
+    { value: "Madhya Pradesh", label: "Madhya Pradesh" },
+    { value: "Maharashtra", label: "Maharashtra" },
+    { value: "Manipur", label: "Manipur" },
+    { value: "Meghalaya", label: "Meghalaya" },
+    { value: "Mizoram", label: "Mizoram" },
+    { value: "Nagaland", label: "Nagaland" },
+    { value: "Odisha", label: "Odisha" },
+    { value: "Punjab", label: "Punjab" },
+    { value: "Rajasthan", label: "Rajasthan" },
+    { value: "Sikkim", label: "Sikkim" },
+    { value: "Tamil Nadu", label: "Tamil Nadu" },
+    { value: "Telangana", label: "Telangana" },
+    { value: "Tripura", label: "Tripura" },
+    { value: "Uttar Pradesh", label: "Uttar Pradesh" },
+    { value: "Uttarakhand", label: "Uttarakhand" },
+    { value: "West Bengal", label: "West Bengal" }
   ];
 
   const handleCauseChange = (selectedCause: string) => {
@@ -132,7 +164,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* CHANGE 2 & 3: Brighter gradient, and removed 'overflow-hidden' so dropdown can escape */}
       <div className="w-full max-w-3xl bg-gradient-to-br from-[#fffcf5] via-[#fdf0d5] to-[#f9d788] rounded-xl shadow-xl p-8 md:p-10 relative">
         
         <div className="absolute inset-3 md:inset-4 border border-amber-900/15 rounded-lg pointer-events-none"></div>
@@ -155,9 +186,14 @@ export default function Home() {
               <input type="text" placeholder="City" required className="w-full px-4 py-2.5 rounded-lg border border-amber-900/20 bg-white/60 text-amber-950 font-medium focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all placeholder-amber-900/40 shadow-sm outline-none" />
             </div>
 
+            {/* CHANGE 1 & 2: State Field replaced with Custom Dropdown mapping 28 states */}
             <div>
               <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">State</label>
-              <input type="text" placeholder="State" required className="w-full px-4 py-2.5 rounded-lg border border-amber-900/20 bg-white/60 text-amber-950 font-medium focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all placeholder-amber-900/40 shadow-sm outline-none" />
+              <CustomDropdown
+                value={selectedState} 
+                onChange={setSelectedState} 
+                options={indiaStatesOptions} 
+              />
             </div>
 
             <div>
@@ -190,6 +226,7 @@ export default function Home() {
 
             <div className="md:col-span-1">
               <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">Donation Amount (₹)</label>
+              {/* CHANGE 3: Added specific arbitrary Tailwind classes to hide the number spinner arrows */}
               <input 
                 type="number" 
                 placeholder="Enter amount" 
@@ -198,6 +235,7 @@ export default function Home() {
                 readOnly={cause === "AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA"}
                 required
                 className={`w-full px-4 py-2.5 rounded-lg border font-bold text-lg transition-all shadow-sm outline-none
+                  [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]
                   ${cause === "AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA" 
                     ? "bg-amber-800/10 border-transparent text-amber-900 cursor-not-allowed" 
                     : "bg-white/60 border-amber-900/20 text-amber-950 focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
@@ -214,7 +252,7 @@ export default function Home() {
           <div className="pt-8 pb-2">
             <button 
               type="button" 
-              className="w-full md:w-auto px-12 py-3.5 bg-gradient-to-r from-red-700 via-orange-600 to-red-700 bg-[length:200%_auto] text-amber-50 font-bold tracking-widest uppercase rounded-lg border border-red-800 shadow-[0_4px_14px_0_rgba(220,38,38,0.39)] hover:shadow-[0_6px_20px_rgba(220,38,38,0.23)] hover:bg-[position:right_center] transition-all duration-300 mx-auto flex justify-center"
+              className="cursor-pointer w-full md:w-auto px-12 py-3.5 bg-gradient-to-r from-red-700 via-orange-600 to-red-700 bg-[length:200%_auto] text-amber-50 font-bold tracking-widest uppercase rounded-lg border border-red-800 shadow-[0_4px_14px_0_rgba(220,38,38,0.39)] hover:shadow-[0_6px_20px_rgba(220,38,38,0.23)] hover:bg-[position:right_center] transition-all duration-300 mx-auto flex justify-center"
             >
               Donate Now
             </button>
