@@ -80,18 +80,28 @@ export default function BookingPage() {
                   let content = null;
                   
                   if (isSelected) {
-                    // Added overflow-hidden and combined the image with a transparent-to-green gradient
-                    blockStyle = "border-green-400 shadow-[0_0_25px_rgba(34,197,94,0.5)] scale-[1.3] z-10 text-white overflow-hidden bg-cover bg-center bg-[linear-gradient(to_bottom,transparent_10%,#16a34a_95%),url('/images/diya.jpg')]";
-                    
-                    // Added a drop-shadow to the text to ensure it pops beautifully against the green
-                    content = (
-                      <span className="absolute bottom-1 md:bottom-1.5 text-[8px] md:text-[10px] font-extrabold leading-none tracking-wider whitespace-nowrap drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">
-                        #{allocatedDiya}
-                      </span>
-                    );
-                  } else if (isBooked) {
-                    blockStyle = "bg-amber-900/10 border-amber-900/10";
-                  }
+      // Clean block style, removed the problematic Tailwind bg-[url]
+      blockStyle = "border-green-400 shadow-[0_0_25px_rgba(34,197,94,0.5)] scale-[1.3] z-10 text-white overflow-hidden";
+      
+      content = (
+        <>
+          {/* Using src attribute for reliable loading */}
+          <img 
+            src="/images/diya.jpg" 
+            alt="Diya" 
+            className="absolute inset-0 w-full h-full object-cover z-0" 
+          />
+          {/* Gradient overlay to achieve the green effect */}
+          <div className="absolute inset-0 bg-gradient-to-t from-green-700 via-transparent to-transparent z-10"></div>
+          {/* Number fixed at bottom */}
+          <span className="absolute bottom-1 md:bottom-1.5 text-[8px] md:text-[10px] font-extrabold leading-none tracking-wider whitespace-nowrap drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)] z-20">
+            #{allocatedDiya}
+          </span>
+        </>
+      );
+    } else if (isBooked) {
+      blockStyle = "bg-amber-900/10 border-amber-900/10";
+    }
 
                   return (
                     <div 
