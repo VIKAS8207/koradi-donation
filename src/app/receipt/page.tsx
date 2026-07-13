@@ -52,10 +52,7 @@ export default function ReceiptPage() {
           {/* Receipt Header (Matching Physical Copy exactly) */}
           <div className="relative text-center border-b-2 border-red-800/20 pb-6 mb-6">
             
-            <div className="flex justify-between items-start text-[10px] md:text-xs font-bold text-red-700/70 mb-2">
-              <span></span>
-              <span className="bg-red-50 px-3 py-1 rounded-full border border-red-100">Reg. No. A-533 (NGP)</span>
-            </div>
+            
 
             <p className="text-xs font-bold text-red-600 mb-1 tracking-widest uppercase">
               !! Shree Mahalaxmi Namha !!
@@ -68,12 +65,15 @@ export default function ReceiptPage() {
             <div className="text-xs md:text-sm font-semibold text-amber-950/80 space-y-1">
               <p>Dist. Nagpur - 441111, M.: 9607979333</p>
               <p>website : www.koraditemple.com, E-mail : koraditemple@gmail.com</p>
-              <p className="font-bold text-red-900">PAN : AACTS5663H</p>
               <p>No. PN / CIT (EXEMPT.) / TECH / 80G / 720 / 2017-18 / 580</p>
+              <div className="flex justify-between items-start text-[10px] md:text-xs font-bold text-red-700/70 mt-2">
+              <span><p className="font-bold text-red-900">PAN : AACTS5663H</p></span>
+              <span className="bg-red-50 px-3 py-1 rounded-full border border-red-100">Reg. No. A-533 (NGP)</span>
+            </div>
             </div>
 
             {/* Receipt Title with styled lines */}
-            <div className="flex items-center justify-center mt-6">
+            <div className="flex items-center justify-center mt-4">
               <div className="h-px bg-red-800/30 flex-grow max-w-[100px]"></div>
               <h2 className="text-xl md:text-2xl font-bold text-red-800 px-4 tracking-widest uppercase">
                 Receipt
@@ -144,11 +144,10 @@ export default function ReceiptPage() {
             {/* Row 5: UPDATED DIYA ALLOCATION FIELD */}
             <div className="flex gap-2 w-full items-center bg-orange-50/50 p-2 rounded-md border border-orange-200 flex-wrap md:flex-nowrap">
               <span className="text-orange-900/80 font-bold whitespace-nowrap flex items-center gap-1">
-                <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C12 2 8 7 8 10C8 12.2091 9.79086 14 12 14C14.2091 14 16 12.2091 16 10C16 7 12 2 12 2Z" /></svg>
                 Allocated Diya No:
               </span>
               <span className="font-extrabold text-orange-700 px-2 w-full tracking-wider flex items-center gap-2 flex-wrap">
-                #1244 
+                #1244, #1245, #1246, #1247, #1248
                 <span className="text-xs font-semibold text-orange-900/60 tracking-normal bg-orange-100/50 px-2 py-0.5 rounded">
                   (Valid for 5 Days - 5 Entries/Day)
                 </span>
