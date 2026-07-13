@@ -35,14 +35,18 @@ export default function ReceiptPage() {
       {/* Main Glassy Container */}
       <div className="w-full max-w-4xl bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-amber-900/10 p-6 md:p-10 flex flex-col items-center">
         
-        {/* The Digital Receipt "Paper" */}
-        <div className="w-full max-w-3xl bg-[#FCF8EB] rounded-sm shadow-[0_0_20px_rgba(0,0,0,0.05)] border-2 border-red-800/20 relative overflow-hidden p-6 md:p-10 text-amber-950 font-serif">
+        {/* The Digital Receipt "Paper" - Removed font-serif to use default font */}
+        <div className="w-full max-w-3xl bg-[#FCF8EB] rounded-sm shadow-[0_0_20px_rgba(0,0,0,0.05)] border-2 border-red-800/20 relative overflow-hidden p-6 md:p-10 text-amber-950">
           
-          {/* Subtle Background Watermark */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
-            <svg className="w-96 h-96" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C12 2 8 7 8 10C8 12.2091 9.79086 14 12 14C14.2091 14 16 12.2091 16 10C16 7 12 2 12 2Z" />
-            </svg>
+          {/* Mild Image Background Watermark */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-80 h-80 md:w-96 md:h-96 rounded-full overflow-hidden opacity-[0.04]">
+              <img 
+                src="/images/karodimatha.jpg" 
+                alt="Watermark" 
+                className="w-full h-full object-cover grayscale mix-blend-multiply" 
+              />
+            </div>
           </div>
 
           {/* Receipt Header (Matching Physical Copy exactly) */}
@@ -137,14 +141,17 @@ export default function ReceiptPage() {
               </div>
             </div>
 
-            {/* Row 5: NEW DIYA ALLOCATION FIELD */}
-            <div className="flex gap-2 w-full items-center bg-orange-50/50 p-2 rounded-md border border-orange-200">
+            {/* Row 5: UPDATED DIYA ALLOCATION FIELD */}
+            <div className="flex gap-2 w-full items-center bg-orange-50/50 p-2 rounded-md border border-orange-200 flex-wrap md:flex-nowrap">
               <span className="text-orange-900/80 font-bold whitespace-nowrap flex items-center gap-1">
                 <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C12 2 8 7 8 10C8 12.2091 9.79086 14 12 14C14.2091 14 16 12.2091 16 10C16 7 12 2 12 2Z" /></svg>
-                Allocated Diya No(s):
+                Allocated Diya No:
               </span>
-              <span className="font-extrabold text-orange-700 px-2 w-full tracking-wider">
-                #1244, #1245, #1246, #1247, #1248
+              <span className="font-extrabold text-orange-700 px-2 w-full tracking-wider flex items-center gap-2 flex-wrap">
+                #1244 
+                <span className="text-xs font-semibold text-orange-900/60 tracking-normal bg-orange-100/50 px-2 py-0.5 rounded">
+                  (Valid for 5 Days - 5 Entries/Day)
+                </span>
               </span>
             </div>
 
