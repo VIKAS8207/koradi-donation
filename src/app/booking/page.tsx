@@ -81,7 +81,7 @@ export default function BookingPage() {
                   
                   if (isSelected) {
                     // Added overflow-hidden and combined the image with a transparent-to-green gradient
-                    blockStyle = "border-green-400 shadow-[0_0_25px_rgba(34,197,94,0.5)] scale-[1.3] z-10 text-white overflow-hidden bg-cover bg-center bg-[linear-gradient(to_bottom,transparent_10%,#16a34a_95%),url('/images/karodimatha.jpg')]";
+                    blockStyle = "border-green-400 shadow-[0_0_25px_rgba(34,197,94,0.5)] scale-[1.3] z-10 text-white overflow-hidden bg-cover bg-center bg-[linear-gradient(to_bottom,transparent_10%,#16a34a_95%),url('/images/diya.jpg')]";
                     
                     // Added a drop-shadow to the text to ensure it pops beautifully against the green
                     content = (
