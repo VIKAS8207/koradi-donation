@@ -169,7 +169,7 @@ export default function BookingPage() {
               
               {/* Highlighted & Scrollable Diya Number Box */}
               <div className="bg-green-50 p-4 rounded-lg border border-green-200 flex flex-col shadow-sm">
-                <span className="text-sm font-bold text-green-900 uppercase tracking-wider mb-3">Allocated Diya(s)</span>
+                <span className="text-sm font-bold text-green-900 uppercase tracking-wider mb-3">Allocated Jyot</span>
                 
                 {/* Custom scrollbar class to keep things neat if many diyas are booked */}
                 <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-green-100 [&::-webkit-scrollbar-thumb]:bg-green-400 [&::-webkit-scrollbar-thumb]:rounded-full">
