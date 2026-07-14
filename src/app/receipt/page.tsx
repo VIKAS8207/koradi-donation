@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import html2canvas from "html2canvas"; // Added for downloading the image
 
 export default function ReceiptPage() {
   const router = useRouter();
@@ -17,9 +18,59 @@ export default function ReceiptPage() {
     }));
   }, []);
 
+  // --- NEW: Download Function ---
+  const handleDownload = async () => {
+    const receiptElement = document.getElementById("receipt-canvas");
+    if (!receiptElement) return;
+
+    try {
+      const canvas = await html2canvas(receiptElement, {
+        scale: 2, // Doubles the resolution for a crisp image
+        useCORS: true, // Ensures local images load properly in the canvas
+        backgroundColor: "#FCF8EB" // Matches your receipt background
+      });
+      
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `Receipt_RT-2026-08492.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error("Failed to download receipt:", error);
+      alert("Failed to download. Please make sure html2canvas is installed.");
+    }
+  };
+
   return (
     <div className="flex-grow flex flex-col items-center justify-start p-4 md:p-8 relative z-10 w-full space-y-6 overflow-auto font-sans">
       
+      {/* --- NEW: Bulletproof Print CSS --- */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #receipt-canvas, #receipt-canvas * {
+            visibility: visible;
+          }
+          #receipt-canvas {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+            padding: 0;
+            box-shadow: none !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          @page {
+            size: landscape;
+            margin: 0;
+          }
+        }
+      `}} />
+
       {/* Success Notification - Hidden when printing */}
       <div className="w-full max-w-2xl bg-green-50/90 backdrop-blur-md border border-green-200 rounded-xl p-3 flex items-center justify-center gap-3 shadow-sm print:hidden shrink-0">
         <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center shrink-0">
@@ -36,9 +87,9 @@ export default function ReceiptPage() {
       <div className="bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-amber-900/10 p-4 flex flex-col items-center shrink-0 print:p-0 print:border-none print:shadow-none print:bg-transparent">
         
         {/* =========================================
-            STRICT 540x356 RECEIPT CANVAS (PDF Ready)
+            STRICT 640x386 RECEIPT CANVAS (Added id="receipt-canvas")
             ========================================= */}
-        <div className="w-[640px] h-[356px] shrink-0 bg-[#FCF8EB] rounded shadow-md border border-red-800/20 relative overflow-hidden p-4 flex flex-col text-amber-950">
+        <div id="receipt-canvas" className="w-[640px] h-[386px] shrink-0 bg-[#FCF8EB] rounded shadow-md border border-red-800/20 relative overflow-hidden p-4 flex flex-col text-amber-950">
           
           {/* Mild Image Background Watermark */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
@@ -170,16 +221,39 @@ export default function ReceiptPage() {
 
           </div>
 
+          {/* --- NEW: DARSHAN ENTRY & TERMS --- */}
+          <div className="w-full flex flex-col border-t border-amber-900/10 pt-1.5 shrink-0 relative z-10">
+            <div className="flex justify-between items-center">
+              <div className=" font-bold text-[8px] px-2 py-0.5 ">
+                <span className="uppercase mr-1">Darshan Entry:</span> This receipt is valid for 11th October 2026 to 16th October 2026
+              </div>
+              <div className="text-[7px] font-bold text-amber-950/70 italic">
+                Note: Please carry this receipt with you for all 5 days.
+              </div>
+            </div>
+            <div className="text-[5px] text-amber-900/40 text-right mt-1 uppercase tracking-widest">
+              *Terms and conditions applied
+            </div>
+          </div>
+
         </div>
 
         {/* Action Buttons - Hidden when printing */}
-        <div className="mt-6 flex gap-4 w-[540px] print:hidden shrink-0">
+        <div className="mt-6 flex gap-4 w-[640px] print:hidden shrink-0">
           <button 
             onClick={() => window.print()}
             className="flex-1 py-2.5 bg-gradient-to-r from-orange-600 to-amber-600 text-white font-bold text-sm tracking-widest uppercase rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-            Print
+            Print / Save PDF
+          </button>
+
+          <button 
+            onClick={handleDownload}
+            className="flex-1 py-2.5 bg-white border border-orange-600 text-orange-700 font-bold text-sm tracking-widest uppercase rounded-lg shadow-sm hover:bg-orange-50 transition-all flex items-center justify-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Download Image
           </button>
           
           <button 

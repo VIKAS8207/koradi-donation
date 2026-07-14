@@ -125,14 +125,7 @@ export default function BookingPage() {
               </div>
             </div>
 
-            {/* Middle Image Block */}
-            <div className="w-full sm:w-56 h-56 shrink-0 rounded-xl overflow-hidden shadow-lg border-4 border-white relative bg-amber-50">
-               <img 
-                src="/images/diya.jpg" 
-                alt="Jyot Reference" 
-                className="w-full h-full object-cover"
-              />
-            </div>
+            
           </div>
 
           {/* --- RIGHT AREA: Payment Stub --- */}
@@ -149,7 +142,7 @@ export default function BookingPage() {
 
             <button 
               onClick={() => router.push("/receipt")}
-              className="w-full py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold tracking-widest uppercase rounded-lg shadow-md hover:shadow-xl transition-all duration-300"
+              className="cursor-pointer w-full py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold tracking-widest uppercase rounded-lg shadow-md hover:shadow-xl transition-all duration-300"
             >
               Proceed to Pay
             </button>
