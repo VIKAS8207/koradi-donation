@@ -54,10 +54,10 @@ export default function ReceiptPage() {
             visibility: visible;
           }
           #receipt-canvas {
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(-50%);
             margin: 0;
             padding: 0;
             box-shadow: none !important;
@@ -113,7 +113,7 @@ export default function ReceiptPage() {
               {/* Circular Space for Logo on the Left */}
               <div className="w-[60px] h-[60px] rounded-full overflow-hidden shrink-0 border border-red-800/20 bg-white flex items-center justify-center">
                 <img 
-                  src="/images/logo.png" 
+                  src="/images/KoradiLogo.png" 
                   alt="Logo" 
                   className="w-full h-full object-cover" 
                 />
