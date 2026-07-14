@@ -80,8 +80,10 @@ const CustomDropdown = ({
 // ==========================================
 export default function Home() {
   const router = useRouter(); 
-  const [cause, setCause] = useState("");
-  const [amount, setAmount] = useState<string | number>("");
+  
+  // Changed: Set defaults to lock the form to the Jyot Navratra cause and 2100 amount
+  const [cause, setCause] = useState("AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA");
+  const [amount, setAmount] = useState<string | number>(2100);
   const [selectedState, setSelectedState] = useState(""); 
 
   const causeOptions = [
@@ -240,10 +242,12 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="md:col-span-1">
               <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">Cause of Donation</label>
-              <CustomDropdown 
-                value={cause} 
-                onChange={handleCauseChange} 
-                options={causeOptions} 
+              {/* Changed: Replaced the dropdown with a read-only unselectable field */}
+              <input 
+                type="text" 
+                value="Akhand Manokamna Jyot Ashwin Navratra" 
+                readOnly 
+                className="w-full px-4 py-2.5 rounded-lg border font-bold text-sm transition-all shadow-sm outline-none bg-amber-800/10 border-transparent text-amber-900 cursor-not-allowed" 
               />
             </div>
 
@@ -274,10 +278,11 @@ export default function Home() {
           <div className="pt-8 pb-2">
             <button 
               type="button" 
-              onClick={handleSubmitNavigation} // Fix applied here
+              onClick={handleSubmitNavigation}
               className="cursor-pointer w-full md:w-auto px-12 py-3.5 bg-gradient-to-r from-red-700 via-orange-600 to-red-700 bg-[length:200%_auto] text-amber-50 font-bold tracking-widest uppercase rounded-lg border border-red-800 shadow-[0_4px_14px_0_rgba(220,38,38,0.39)] hover:shadow-[0_6px_20px_rgba(220,38,38,0.23)] hover:bg-[position:right_center] transition-all duration-300 mx-auto flex justify-center"
             >
-              {cause === "AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA" ? "Book Now" : "Donate Now"}
+              {/* Changed: Enforced "Book Now" as the fixed text */}
+              Book Now
             </button>
           </div>
         </form>
