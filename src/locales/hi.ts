@@ -1,8 +1,7 @@
 export const hi = {
   // Navbar
-  home: "होम",
-  form: "फॉर्म",
-  payment: "भुगतान",
+  home: "करौंदी माता मंदिर",
+  
   
   // Form Page
   makeDonation: "दान करें",
@@ -18,9 +17,60 @@ export const hi = {
   mobileNumber: "मोबाइल नंबर",
   emailAddress: "ईमेल पता",
   causeOfDonation: "दान का कारण",
+  donationTopic: "अखंड मनोकामना ज्योत (आश्विन नवरात्र)",
   donationAmount: "दान राशि (₹)",
   enterAmount: "राशि दर्ज करें",
   fixedAmountNotice: "* इस कारण के लिए राशि ₹2100 तय की गई है।",
   bookNow: "अभी बुक करें",
-  selectOption: "एक विकल्प चुनें"
+  selectOption: "एक विकल्प चुनें",
+
+  // ... your existing translations
+  confirmBooking: "बुकिंग की पुष्टि करें",
+  allocationSubtitle: "अखंड मनोकामना ज्योत आवंटन",
+  shreeMahalaxmi: "!! श्री महालक्ष्मी नमः !!",
+  jyotTitle: "अखंड मनोकामना ज्योत",
+  templeName: "श्री महालक्ष्मी जगदंबा संस्थान, कोराडी",
+  allocatedJyot: "आवंटित ज्योत",
+  duration: "अवधि",
+  fiveDays: "5 दिन",
+  accessRules: "प्रवेश नियम",
+  fiveEntries: "प्रति दिन 5 प्रवेश अनुमत",
+  totalPayable: "कुल देय राशि",
+  flatRate: "एकल आवंटन के लिए निश्चित दर",
+  proceedToPay: "भुगतान करने के लिए आगे बढ़ें",
+  secureCheckout: "सुरक्षित चेकआउट",
+
+  // ... your existing translations
+  transactionSuccess: "लेन-देन सफल! आपकी रसीद उत्पन्न हो गई है।",
+  regNo: "पंजीकरण संख्या A-533 (NGP)",
+  
+  templeAddress: "जिला नागपुर - 441111, मो.: 9607979555/333/111",
+  templeContact: "वेबसाइट: www.koraditemple.com, ईमेल: koraditemple@gmail.com",
+  panCard: "पैन: AACTS5663H",
+  exemptNo: "क्र. PN / CIT (EXEMPT.) / TECH/80G/720/2017-18/580",
+  receiptTitle: "रसीद",
+  receiptNoLabel: "रसीद संख्या",
+  dateLabel: "दिनांक",
+  receivedFromLabel: "धन्यवाद सहित प्राप्त",
+  addressLabel: "पता",
+  donationTypeLabel: "दान का प्रकार",
+  
+  jyotNoLabel: "ज्योत संख्या",
+  mobNoLabel: "मोबाइल नं.",
+  panNoLabel: "पैन नं.",
+  sumOfRupeesLabel: "रुपये की राशि",
+  amountInWords: "केवल दो हजार एक सौ",
+  receiverSignature: "प्राप्तकर्ता के हस्ताक्षर",
+  darshanEntryLabel: "दर्शन प्रवेश:",
+  darshanValidText: "यह रसीद 11 अक्टूबर 2026 से 16 अक्टूबर 2026 तक मान्य है",
+  carryReceiptNote: "नोट: कृपया सभी 5 दिनों के लिए इस रसीद को अपने साथ रखें।",
+  termsApplied: "*नियम और शर्तें लागू",
+  printBtn: "प्रिंट / पीडीएफ सहेजें",
+  downloadBtn: "छवि डाउनलोड करें",
+  homeBtn: "होम",
+
+  // ... your existing translations
+  paymentFailed: "भुगतान विफल रहा",
+  paymentErrorMsg: "आपका भुगतान संसाधित करते समय कुछ समस्या उत्पन्न हुई। कृपया वापस जाएं और पुनः प्रयास करें।",
+  tryAgain: "पुनः प्रयास करें",
 };

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation"; 
 import { useLanguage } from "../context/LanguageContext";
+import { getTranslatedStates, getTranslatedCities } from "../lib/indiaLocations"; // Import our new library
 
 // ==========================================
 // Custom Dropdown Component
@@ -18,7 +19,7 @@ const CustomDropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { t } = useLanguage(); // Use translation for placeholder
+  const { t } = useLanguage(); 
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,11 +40,11 @@ const CustomDropdown = ({
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-4 py-2.5 rounded-lg bg-white/60 hover:bg-white/80 text-amber-950 font-medium transition-all shadow-sm outline-none flex justify-between items-center border border-amber-900/20 focus:ring-2 focus:ring-orange-500"
       >
-        <span className={value ? "text-amber-950" : "text-amber-900/60"}>
+        <span className={value ? "text-amber-950" : "text-amber-900/60 truncate mr-2"}>
           {selectedLabel}
         </span>
         
-        <div className="flex items-center justify-center w-6 h-6 text-amber-800">
+        <div className="flex items-center justify-center w-6 h-6 text-amber-800 shrink-0">
           <svg 
             className={`w-5 h-5 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
             fill="none" 
@@ -58,18 +59,24 @@ const CustomDropdown = ({
       {isOpen && (
         <div className="absolute z-50 w-full mt-2 bg-[#fffcf5] rounded-lg shadow-2xl border border-amber-900/10">
           <ul className="max-h-60 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-amber-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-amber-400">
-            {options.map((option) => (
-              <li
-                key={option.value}
-                onClick={() => {
-                  onChange(option.value);
-                  setIsOpen(false);
-                }}
-                className="px-4 py-3 cursor-pointer text-amber-950 hover:bg-amber-100/80 hover:text-orange-900 transition-colors font-medium border-b border-amber-900/5 last:border-none"
-              >
-                {option.label}
+            {options.length > 0 ? (
+              options.map((option) => (
+                <li
+                  key={option.value}
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                  }}
+                  className="px-4 py-3 cursor-pointer text-amber-950 hover:bg-amber-100/80 hover:text-orange-900 transition-colors font-medium border-b border-amber-900/5 last:border-none"
+                >
+                  {option.label}
+                </li>
+              ))
+            ) : (
+              <li className="px-4 py-3 text-amber-950/50 italic text-sm text-center">
+                Please select a state first
               </li>
-            ))}
+            )}
           </ul>
         </div>
       )}
@@ -82,36 +89,23 @@ const CustomDropdown = ({
 // ==========================================
 export default function Home() {
   const router = useRouter(); 
-  const { t } = useLanguage(); // Initialize translation hook
+  const { t, language } = useLanguage(); // Grab current language from context
   
-  const [cause, setCause] = useState("AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA");
-  const [amount, setAmount] = useState<string | number>(2100);
   const [selectedState, setSelectedState] = useState(""); 
+  const [selectedCity, setSelectedCity] = useState(""); 
 
-  const indiaStatesOptions = [
-    { value: "Andhra Pradesh", label: "Andhra Pradesh" },
-    { value: "Chhattisgarh", label: "Chhattisgarh" },
-    { value: "Maharashtra", label: "Maharashtra" },
-    // ... add back the rest of your states here
-  ];
+  // Dynamically load translated states and cities based on current language
+  const indiaStatesOptions = getTranslatedStates(language as "en" | "hi" | "mr");
+  const cityOptions = getTranslatedCities(selectedState, language as "en" | "hi" | "mr");
 
-  const handleCauseChange = (selectedCause: string) => {
-    setCause(selectedCause);
-    if (selectedCause === "AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA") {
-      setAmount(2100);
-    } else {
-      setAmount(""); 
-    }
+  const handleStateChange = (newState: string) => {
+    setSelectedState(newState);
+    setSelectedCity(""); // Reset city selection when a new state is selected
   };
 
+  // Simplified navigation: cause logic is removed, goes directly to booking
   const handleSubmitNavigation = () => {
-    if (!cause) return alert("Please select a cause.");
-
-    if (cause === "AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA") {
-      router.push("/booking");
-    } else {
-      router.push("/payment");
-    }
+    router.push("/booking");
   };
 
   return (
@@ -169,13 +163,21 @@ export default function Home() {
             </div>
 
             <div>
-              <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">{t('city')}</label>
-              <input type="text" placeholder={t('city')} required className="w-full px-4 py-2.5 rounded-lg border border-amber-900/20 bg-white/60 text-amber-950 font-medium focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all placeholder-amber-900/40 shadow-sm outline-none" />
+              <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">{t('state')}</label>
+              <CustomDropdown 
+                value={selectedState} 
+                onChange={handleStateChange} 
+                options={indiaStatesOptions} 
+              />
             </div>
 
             <div>
-              <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">{t('state')}</label>
-              <CustomDropdown value={selectedState} onChange={setSelectedState} options={indiaStatesOptions} />
+              <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">{t('city')}</label>
+              <CustomDropdown 
+                value={selectedCity} 
+                onChange={setSelectedCity} 
+                options={cityOptions} 
+              />
             </div>
 
             <div>
@@ -201,7 +203,7 @@ export default function Home() {
               <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">{t('causeOfDonation')}</label>
               <input 
                 type="text" 
-                value="Akhand Manokamna Jyot Ashwin Navratra" 
+                value={t('causeOfDonation')}
                 readOnly 
                 className="w-full px-4 py-2.5 rounded-lg border font-bold text-sm transition-all shadow-sm outline-none bg-amber-800/10 border-transparent text-amber-900 cursor-not-allowed" 
               />
@@ -209,25 +211,18 @@ export default function Home() {
 
             <div className="md:col-span-1">
               <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">{t('donationAmount')}</label>
+              {/* Logic removed: Hardcoded to 2100 with read-only state */}
               <input 
                 type="number" 
                 placeholder={t('enterAmount')} 
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                readOnly={cause === "AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA"}
+                value={2100}
+                readOnly
                 required
-                className={`w-full px-4 py-2.5 rounded-lg border font-bold text-lg transition-all shadow-sm outline-none
-                  [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]
-                  ${cause === "AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA" 
-                    ? "bg-amber-800/10 border-transparent text-amber-900 cursor-not-allowed" 
-                    : "bg-white/60 border-amber-900/20 text-amber-950 focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                  }`} 
+                className="w-full px-4 py-2.5 rounded-lg border font-bold text-lg transition-all shadow-sm outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield] bg-amber-800/10 border-transparent text-amber-900 cursor-not-allowed" 
               />
-              {cause === "AKHAND MANOKAMNA JYOT ASHWIN NAVRATRA" && (
-                <p className="text-xs text-red-700 mt-2 font-semibold">
-                  {t('fixedAmountNotice')}
-                </p>
-              )}
+              <p className="text-xs text-red-700 mt-2 font-semibold">
+                {t('fixedAmountNotice')}
+              </p>
             </div>
           </div>
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LanguageProvider } from "../context/LanguageContext";
 import "./globals.css";
-// import Navbar from "../components/layout/Navbar";
+import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import PhysicsBackground from "../components/layout/PhysicsBackground";
 
@@ -24,7 +24,8 @@ export default function RootLayout({
         
         {/* We wrap absolutely everything inside the body with the LanguageProvider */}
         <LanguageProvider>
-          
+        
+          <Navbar />
           {/* Global Traditional "Living" Background Container */}
           <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#fffcf5]">
             

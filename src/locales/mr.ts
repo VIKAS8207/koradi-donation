@@ -1,8 +1,7 @@
 export const mr = {
   // Navbar
-  home: "मुख्यपृष्ठ",
-  form: "फॉर्म",
-  payment: "पेमेंट",
+  home: "करोंडी माता मंदिर",
+  
   
   // Form Page
   makeDonation: "देणगी द्या",
@@ -18,9 +17,60 @@ export const mr = {
   mobileNumber: "मोबाईल नंबर",
   emailAddress: "ईमेल पत्ता",
   causeOfDonation: "देणगीचे कारण",
+  donationTopic: "अखंड मनोकामना ज्योत (आश्विन नवरात्र)",
   donationAmount: "देणगीची रक्कम (₹)",
   enterAmount: "रक्कम प्रविष्ट करा",
   fixedAmountNotice: "* या कारणासाठी रक्कम ₹2100 निश्चित केली आहे.",
   bookNow: "आता बुक करा",
-  selectOption: "पर्याय निवडा"
+  selectOption: "पर्याय निवडा",
+
+  // ... your existing translations
+  confirmBooking: "बुकिंगची पुष्टी करा",
+  allocationSubtitle: "अखंड मनोकामना ज्योत वाटप",
+  shreeMahalaxmi: "!! श्री महालक्ष्मी नमः !!",
+  jyotTitle: "अखंड मनोकामना ज्योत",
+  templeName: "श्री महालक्ष्मी जगदंबा संस्थान, कोराडी",
+  allocatedJyot: "वाटप केलेली ज्योत",
+  duration: "कालावधी",
+  fiveDays: "5 दिवस",
+  accessRules: "प्रवेश नियम",
+  fiveEntries: "दररोज 5 प्रवेशास अनुमती",
+  totalPayable: "एकूण देय रक्कम",
+  flatRate: "एकेरी वाटपासाठी निश्चित दर",
+  proceedToPay: "पैसे भरण्यासाठी पुढे जा",
+  secureCheckout: "सुरक्षित चेकआउट",
+
+  // ... your existing translations
+  transactionSuccess: "व्यवहार यशस्वी! तुमची पावती तयार झाली आहे.",
+  regNo: "नोंदणी क्र. A-533 (NGP)",
+  
+  templeAddress: "जि. नागपूर - 441111, मो.: 9607979555/333/111",
+  templeContact: "वेबसाइट: www.koraditemple.com, ईमेल: koraditemple@gmail.com",
+  panCard: "पॅन: AACTS5663H",
+  exemptNo: "क्र. PN / CIT (EXEMPT.) / TECH/80G/720/2017-18/580",
+  receiptTitle: "पावती",
+  receiptNoLabel: "पावती क्र.",
+  dateLabel: "दिनांक",
+  receivedFromLabel: "सस्नेह धन्यवाद प्राप्त",
+  addressLabel: "पत्ता",
+  donationTypeLabel: "देणगीचा प्रकार",
+  
+  jyotNoLabel: "ज्योत क्र.",
+  mobNoLabel: "मोबाईल क्र.",
+  panNoLabel: "पॅन क्र.",
+  sumOfRupeesLabel: "रुपयांची रक्कम",
+  amountInWords: "फक्त दोन हजार एकशे",
+  receiverSignature: "प्राप्तकर्त्याची स्वाक्षरी",
+  darshanEntryLabel: "दर्शन प्रवेश:",
+  darshanValidText: "ही पावती 11 ऑक्टोबर 2026 ते 16 ऑक्टोबर 2026 पर्यंत वैध आहे",
+  carryReceiptNote: "टीप: कृपया सर्व 5 दिवसांसाठी ही पावती आपल्यासोबत ठेवा.",
+  termsApplied: "*नियम आणि अटी लागू",
+  printBtn: "प्रिंट / पीडीएफ सेव्ह करा",
+  downloadBtn: "इमेज डाउनलोड करा",
+  homeBtn: "मुख्यपृष्ठ",
+
+  // ... your existing translations
+  paymentFailed: "पेमेंट अयशस्वी",
+  paymentErrorMsg: "तुमच्या पेमेंटवर प्रक्रिया करताना काही समस्या आली. कृपया मागे जा आणि पुन्हा प्रयत्न करा.",
+  tryAgain: "पुन्हा प्रयत्न करा",
 };

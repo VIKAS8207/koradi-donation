@@ -1,8 +1,6 @@
 export const en = {
   // Navbar
-  home: "Home",
-  form: "Form",
-  payment: "Payment",
+  home: "Koradi Mata Mandir",
   
   // Form Page
   makeDonation: "Make a Donation",
@@ -18,9 +16,61 @@ export const en = {
   mobileNumber: "Mobile Number",
   emailAddress: "Email Address",
   causeOfDonation: "Cause of Donation",
+  donationTopic: "Akhand Manokamna Jyot Ashwin Navratra",
   donationAmount: "Donation Amount (₹)",
   enterAmount: "Enter amount",
   fixedAmountNotice: "* Amount is fixed at ₹2100 for this cause.",
   bookNow: "Book Now",
-  selectOption: "Select an option"
+  selectOption: "Select an option",
+
+  // ... your existing translations
+  confirmBooking: "Confirm Booking",
+  allocationSubtitle: "Akhand Manokamna Jyot Allocation",
+  shreeMahalaxmi: "!! Shree Mahalaxmi Namha !!",
+  jyotTitle: "Akhand Manokamna Jyot",
+  templeName: "Shree Mahalaxmi Jagdamba Sansthan, Koradi",
+  allocatedJyot: "Allocated Jyot",
+  duration: "Duration",
+  fiveDays: "5 Days",
+  accessRules: "Access Rules",
+  fiveEntries: "5 Entries Allowed / Day",
+  totalPayable: "Total Payable Amount",
+  flatRate: "Flat rate for single allocation",
+  proceedToPay: "Proceed to Pay",
+  secureCheckout: "Secure Checkout",
+
+  // ... your existing translations
+  transactionSuccess: "Transaction Successful! Your receipt has been generated.",
+  regNo: "Reg. No. A-533 (NGP)",
+  
+  templeAddress: "Dist. Nagpur - 441111, M.: 9607979555/333/111",
+  templeContact: "website: www.koraditemple.com, E-mail: koraditemple@gmail.com",
+  panCard: "PAN: AACTS5663H",
+  exemptNo: "No. PN / CIT (EXEMPT.) / TECH/80G/720/2017-18/580",
+  receiptTitle: "Receipt",
+  receiptNoLabel: "Receipt No.",
+  dateLabel: "Date",
+  receivedFromLabel: "Received with thanks from",
+  addressLabel: "Address",
+  donationTypeLabel: "Type of Donation",
+  
+  jyotNoLabel: "Jyot No.",
+  mobNoLabel: "Mob No.",
+  panNoLabel: "PAN No.",
+  sumOfRupeesLabel: "The sum of Rupees",
+  amountInWords: "Two Thousand One Hundred Only",
+  receiverSignature: "Receiver's Signature",
+  darshanEntryLabel: "Darshan Entry:",
+  darshanValidText: "This receipt is valid for 11th October 2026 to 16th October 2026",
+  carryReceiptNote: "Note: Please carry this receipt with you for all 5 days.",
+  termsApplied: "*Terms and conditions applied",
+  printBtn: "Print / Save PDF",
+  downloadBtn: "Download Image",
+  homeBtn: "Home",
+
+  // ... your existing translations
+  paymentFailed: "Payment Failed",
+  paymentErrorMsg: "Some problem occurred while processing your payment. Please go back and try again.",
+  tryAgain: "Try Again",
 };
+
