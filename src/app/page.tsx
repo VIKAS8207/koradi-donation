@@ -203,7 +203,7 @@ export default function Home() {
               <label className="block text-amber-950 text-sm font-bold mb-1.5 tracking-wide">{t('causeOfDonation')}</label>
               <input 
                 type="text" 
-                value={t('causeOfDonation')}
+                value={t('donationTopic')}
                 readOnly 
                 className="w-full px-4 py-2.5 rounded-lg border font-bold text-sm transition-all shadow-sm outline-none bg-amber-800/10 border-transparent text-amber-900 cursor-not-allowed" 
               />

@@ -89,7 +89,7 @@ export default function ReceiptPage() {
       <div className="bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-amber-900/10 p-4 flex flex-col items-center shrink-0 print:p-0 print:border-none print:shadow-none print:bg-transparent">
         
         {/* =========================================
-            STRICT 640x386 RECEIPT CANVAS (Added id="receipt-canvas")
+            STRICT 640x386 RECEIPT CANVAS
             ========================================= */}
         <div id="receipt-canvas" className="w-[640px] h-[386px] shrink-0 bg-[#FCF8EB] rounded shadow-md border border-red-800/20 relative overflow-hidden p-4 flex flex-col text-amber-950">
           
@@ -112,12 +112,12 @@ export default function ReceiptPage() {
             </div>
 
             <div className="flex items-center gap-3 w-full">
-              {/* Circular Space for Logo on the Left */}
-              <div className="w-[60px] h-[60px] rounded-full overflow-hidden shrink-0 border border-red-800/20 bg-white flex items-center justify-center">
+              {/* Square Space for Logo on the Left */}
+              <div className="w-[60px] h-[60px] shrink-0 flex items-center justify-center">
                 <img 
                   src="/images/KoradiLogo.png" 
                   alt="Logo" 
-                  className="w-full h-full object-cover" 
+                  className="w-full h-full object-contain" 
                 />
               </div>
 
@@ -150,80 +150,82 @@ export default function ReceiptPage() {
             </div>
           </div>
 
-          {/* --- RECEIPT BODY (Perfect Line-by-Line Symmetry) --- */}
-          <div className="flex flex-col space-y-2.5 text-[9px] font-medium w-full relative z-10 px-2 flex-grow">
+          {/* =========================================
+              NEW: STRICT TWO-COLUMN RECEIPT BODY 
+              ========================================= */}
+          <div className="flex flex-row w-full relative z-10 px-2 text-[9px] font-medium mt-1 flex-grow">
             
-            {/* Line 1: Receipt No & Date */}
-            <div className="flex justify-between w-full">
-              <div className="flex w-1/2">
+            {/* LEFT COLUMN (65% Width) */}
+            <div className="flex flex-col space-y-2.5 w-[65%]">
+              <div className="flex">
                 <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('receiptNoLabel')}</span>
                 <span className="font-bold">: RT-2026-08492</span>
               </div>
-              <div className="flex w-1/2 justify-end">
-                <span className="w-10 text-amber-900/70 font-semibold shrink-0">{t('dateLabel')}</span>
-                <span className="font-bold">: {currentDate}</span>
+              <div className="flex">
+                <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('receivedFromLabel')}</span>
+                <span className="font-bold">: Vikas Vishwakarma</span>
               </div>
-            </div>
-
-            {/* Line 2: Received with thanks from */}
-            <div className="flex w-full">
-              <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('receivedFromLabel')}</span>
-              <span className="font-bold">: Vikas Vishwakarma</span>
-            </div>
-
-            {/* Line 3: Address */}
-            <div className="flex w-full">
-              <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('addressLabel')}</span>
-              <span className="font-bold">: Raipur, Chhattisgarh</span>
-            </div>
-
-            {/* Line 4: Type of Donation & Jyot Number */}
-            <div className="flex justify-between w-full items-center">
+              <div className="flex">
+                <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('addressLabel')}</span>
+                <span className="font-bold">: Raipur, Chhattisgarh</span>
+              </div>
               <div className="flex">
                 <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('donationTypeLabel')}</span>
                 <span className="font-bold uppercase">: {t('jyotTitle')}</span>
               </div>
-              <div className="flex items-center">
-                <span className="w-22 text-amber-900/70 font-semibold shrink-0">{t('jyotNoLabel')}</span>
-                <span className="font-bold">: #1244</span>
-              </div>
-            </div>
-
-            {/* Line 5: Mobile & PAN */}
-            <div className="flex justify-between w-full">
-              <div className="flex w-1/2">
+              <div className="flex">
                 <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('mobNoLabel')}</span>
                 <span className="font-bold">: +91 XXXXX XXXXX</span>
               </div>
-              <div className="flex w-1/2 justify-end">
+              <div className="flex">
+                <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('sumOfRupeesLabel')}</span>
+                <span className="font-bold italic">: {t('amountInWords')}</span>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN (35% Width) */}
+            <div className="flex flex-col space-y-2.5 w-[35%] pl-2">
+              <div className="flex">
+                <span className="w-14 text-amber-900/70 font-semibold shrink-0">{t('dateLabel')}</span>
+                <span className="font-bold">: {currentDate}</span>
+              </div>
+              <div className="flex">
+                <span className="w-14 text-amber-900/70 font-semibold shrink-0">{t('jyotNoLabel')}</span>
+                <span className="font-bold">: #1244</span>
+              </div>
+              <div className="flex">
                 <span className="w-14 text-amber-900/70 font-semibold shrink-0">{t('panNoLabel')}</span>
                 <span className="font-bold">: XXXXXXXXXX</span>
               </div>
-            </div>
-
-            {/* Gap before the final section */}
-            <div className="h-1"></div> 
-
-            {/* Line 6: Sum of Rupees (Words) */}
-            <div className="flex w-full">
-              <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('sumOfRupeesLabel')}</span>
-              <span className="font-bold italic">: {t('amountInWords')}</span>
-            </div>
-            
-            {/* Line 7: Amount & Signature */}
-            <div className="flex justify-between items-end w-full mt-auto pb-2">
-              <div className="text-lg font-bold text-amber-950 flex items-center">
-                ₹ 2,100/-
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="w-32 h-px bg-amber-900/40 mb-1"></div>
-                <span className="text-[7px] font-bold uppercase tracking-wider text-amber-900/70">{t('receiverSignature')}</span>
+              {/* QR Code placed directly below PAN with proper alignment */}
+              <div className="flex mt-1">
+                <span className="w-14 shrink-0"></span>
+                <div className="pl-1">
+                  <div className="w-12 h-12 border border-black bg-white p-0.5 flex items-center justify-center">
+                    <svg className="w-full h-full text-black" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M4 4h4v4H4V4zm2 2v-2h-2v2h2zm8-2h4v4h-4V4zm2 2v-2h-2v2h2zM4 14h4v4H4v-4zm2 2v-2h-2v2h2zm6-2h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4-4h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
 
           </div>
 
-          {/* --- NEW: DARSHAN ENTRY & TERMS --- */}
+          {/* =========================================
+              BOTTOM ROW: AMOUNT & SIGNATURE
+              ========================================= */}
+          <div className="flex justify-between items-end w-full mt-auto pb-2 px-2 relative z-10">
+            <div className="text-lg font-bold text-amber-950 flex items-center">
+              ₹ 2,100/-
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-32 h-px bg-amber-900/40 mb-1"></div>
+              <span className="text-[7px] font-bold uppercase tracking-wider text-amber-900/70">{t('receiverSignature')}</span>
+            </div>
+          </div>
+
+          {/* --- DARSHAN ENTRY & TERMS --- */}
           <div className="w-full flex flex-col border-t border-amber-900/10 pt-1.5 shrink-0 relative z-10">
             <div className="flex justify-between items-center">
               <div className=" font-bold text-[8px] px-2 py-0.5 ">
