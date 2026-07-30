@@ -126,7 +126,7 @@ export default function ReceiptPage() {
                 <div className="w-[200px] h-[200px] rounded-full overflow-hidden opacity-[0.03]">
                   <img 
                     src="/images/logo.png" 
-                    alt="Watermark" 
+                    alt="-" 
                     className="w-full h-full object-cover grayscale mix-blend-multiply" 
                   />
                 </div>
