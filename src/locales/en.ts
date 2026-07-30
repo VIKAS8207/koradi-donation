@@ -50,7 +50,7 @@ export const en = {
   receiptTitle: "Receipt",
   receiptNoLabel: "Receipt No.",
   dateLabel: "Date",
-  receivedFromLabel: "Received with thanks from",
+  receivedFromLabel: "Received from",
   addressLabel: "Address",
   donationTypeLabel: "Type of Donation",
   

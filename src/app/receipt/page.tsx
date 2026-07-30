@@ -1,37 +1,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
-import html2canvas from "html2canvas"; // Added for downloading the image
-import { useLanguage } from "../../context/LanguageContext"; // Added context import
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import html2canvas from "html2canvas";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function ReceiptPage() {
   const router = useRouter();
-  const { t } = useLanguage(); // Initialize translation hook
+  const { t } = useLanguage();
   const [currentDate, setCurrentDate] = useState("");
-
-  // --- NEW: Responsive Scaling Logic ---
-  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Scaling State
   const [scale, setScale] = useState(1);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        // Get the inner width of the container minus the p-4 (16px * 2) padding
-        const availableWidth = containerRef.current.offsetWidth - 32;
-        // If the screen is smaller than 640px, scale it down proportionally
-        if (availableWidth < 640) {
-          setScale(availableWidth / 640);
-        } else {
-          setScale(1); // Normal size for desktop
-        }
-      }
-    };
-
-    handleResize(); // Run immediately on mount
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const [wrapperHeight, setWrapperHeight] = useState("auto");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Generate the current date in the traditional format
@@ -43,16 +26,54 @@ export default function ReceiptPage() {
     }));
   }, []);
 
-  // --- Download Function ---
+  // --- Dynamic Scaling Logic to fit screen without ANY scrolling ---
+  useLayoutEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current && receiptRef.current) {
+        // Target fixed width of our receipt
+        const TARGET_WIDTH = 850; 
+        
+        // 1. Available width in the parent container
+        const availableWidth = containerRef.current.clientWidth;
+        
+        // 2. Available height on the screen 
+        // (Viewport height minus ~250px to leave room for paddings, success message, and buttons)
+        const availableHeight = window.innerHeight - 250;
+        
+        // 3. True unscaled height of the receipt
+        const unscaledHeight = receiptRef.current.offsetHeight;
+
+        // Calculate scales for both dimensions
+        const widthScale = availableWidth / TARGET_WIDTH;
+        const heightScale = availableHeight / unscaledHeight;
+
+        // Take the smallest scale to ensure it fits BOTH horizontally and vertically. Cap at 1 (100%).
+        const newScale = Math.min(widthScale, heightScale, 1);
+        setScale(newScale);
+
+        // Adjust the wrapper height so we don't have empty whitespace below the scaled receipt
+        setWrapperHeight(`${unscaledHeight * newScale}px`);
+      }
+    };
+
+    // Run on mount and when fonts/images finish loading
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    // Slight delay to ensure content has rendered before final height measurement
+    setTimeout(updateScale, 100); 
+    
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
+
   const handleDownload = async () => {
     const receiptElement = document.getElementById("receipt-canvas");
     if (!receiptElement) return;
 
     try {
       const canvas = await html2canvas(receiptElement, {
-        scale: 2, // Doubles the resolution for a crisp image
-        useCORS: true, // Ensures local images load properly in the canvas
-        backgroundColor: "#FCF8EB" // Matches your receipt background
+        scale: 2, // High resolution for download
+        useCORS: true, 
+        backgroundColor: "#FCF8EB" 
       });
       
       const dataUrl = canvas.toDataURL("image/png");
@@ -67,63 +88,63 @@ export default function ReceiptPage() {
   };
 
   return (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 md:p-8 relative z-10 w-full space-y-6 overflow-auto font-sans">
+    // min-h-[100dvh] ensures it fits the mobile viewport perfectly
+    <div className="flex flex-col items-center justify-center p-4 md:p-8 relative z-10 w-full min-h-[100dvh] font-sans bg-zinc-50 overflow-hidden">
       
-      {/* --- Bulletproof Print CSS --- */}
+      {/* Bulletproof Print CSS */}
       <style dangerouslySetInnerHTML={{__html: `
         @media print {
-          body * {
-            visibility: hidden;
-          }
-          #receipt-canvas, #receipt-canvas * {
-            visibility: visible;
-          }
+          body * { visibility: hidden; }
+          #receipt-canvas, #receipt-canvas * { visibility: visible; }
           #receipt-canvas {
             position: absolute;
             left: 0;
             top: 0;
-            transform: translate(-50%);
+            width: 100%;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             box-shadow: none !important;
+            border: none !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+            transform: none !important;
           }
-          @page {
-            size: landscape;
-            margin: 0;
-          }
+          @page { size: landscape; margin: 0.5cm; }
         }
       `}} />
 
-      {/* Success Notification - Hidden when printing */}
-      <div className="w-full max-w-2xl bg-green-50/90 backdrop-blur-md border border-green-200 rounded-xl p-3 flex items-center justify-center gap-3 shadow-sm print:hidden shrink-0">
+      {/* Success Notification */}
+      <div className="w-full max-w-[850px] bg-green-50/90 backdrop-blur-md border border-green-200 rounded-xl p-3 flex items-center justify-center gap-3 shadow-sm print:hidden shrink-0 mb-4 md:mb-6">
         <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center shrink-0">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
           </svg>
         </div>
-        <p className="text-green-800 font-bold text-sm tracking-wide">
+        <p className="text-green-800 font-bold text-sm md:text-base tracking-wide">
           {t('transactionSuccess')}
         </p>
       </div>
 
-      {/* Main Container Wrapper with ref attached for width calculation */}
-      <div ref={containerRef} className="w-full max-w-3xl bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-amber-900/10 p-4 flex flex-col items-center shrink-0 print:p-0 print:border-none print:shadow-none print:bg-transparent">
-        
-        {/* --- NEW: Dynamic Scaling Wrapper --- */}
-        {/* This height dynamic adjustment ensures no massive white space is left below when shrunk */}
-        <div className="flex justify-center items-start w-full" style={{ height: `${386 * scale}px` }}>
-          <div style={{ transform: `scale(${scale})`, transformOrigin: 'top center', width: '640px', height: '386px' }}>
+      {/* --- SCALING WRAPPER --- */}
+      <div ref={containerRef} className="w-full max-w-[850px] flex justify-center">
+        {/* Height container prevents layout jumping/whitespace */}
+        <div style={{ height: wrapperHeight, width: '100%', display: 'flex', justifyContent: 'center' }}>
+          
+          {/* Scaled Element */}
+          <div style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }}>
             
             {/* =========================================
-                STRICT 640x386 RECEIPT CANVAS
+                STRICT FIXED-PIXEL RECEIPT CANVAS
                 ========================================= */}
-            <div id="receipt-canvas" className="w-[640px] h-[386px] shrink-0 bg-[#FCF8EB] rounded shadow-md border border-red-800/20 relative overflow-hidden p-4 flex flex-col text-amber-950">
+            <div 
+              id="receipt-canvas" 
+              ref={receiptRef}
+              className="w-[850px] bg-[#FCF8EB] rounded-2xl shadow-2xl border border-red-800/20 relative overflow-hidden p-10 flex flex-col text-amber-950 shrink-0"
+            >
               
-              {/* Mild Image Background Watermark */}
+              {/* Background Watermark */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                <div className="w-[200px] h-[200px] rounded-full overflow-hidden opacity-[0.03]">
+                <div className="w-[450px] h-[450px] rounded-full overflow-hidden opacity-[0.03]">
                   <img 
                     src="/images/logo.png" 
                     alt="-" 
@@ -134,14 +155,13 @@ export default function ReceiptPage() {
 
               {/* --- RECEIPT HEADER --- */}
               <div className="relative z-10 w-full shrink-0">
-                {/* Top Registration Number */}
-                <div className="text-[7px] text-red-800 font-bold w-full text-left mb-1">
+                <div className="text-sm text-red-800 font-bold w-full text-left mb-4">
                   {t('regNo')}
                 </div>
 
-                <div className="flex items-center gap-3 w-full">
-                  {/* Square Space for Logo on the Left */}
-                  <div className="w-[60px] h-[60px] shrink-0 flex items-center justify-center">
+                <div className="flex items-center gap-6 w-full">
+                  {/* Logo */}
+                  <div className="w-28 h-28 shrink-0 flex items-center justify-center">
                     <img 
                       src="/images/KoradiLogo.png" 
                       alt="Logo" 
@@ -149,102 +169,91 @@ export default function ReceiptPage() {
                     />
                   </div>
 
-                  {/* Exact Text from Reference Image */}
+                  {/* Temple Details */}
                   <div className="flex-1 text-center flex flex-col justify-center">
-                    <p className="text-[8px] font-bold text-red-600 mb-0.5">
+                    <p className="text-base font-bold text-red-600 mb-1">
                       {t('shreeMahalaxmi')}
                     </p>
-                    <h1 className="text-[13px] font-black text-red-800 uppercase leading-tight">
+                    <h1 className="text-4xl font-black text-red-800 uppercase leading-tight mb-2 tracking-tight">
                       {t('templeName')}
                     </h1>
-                    <p className="text-[7px] font-semibold text-amber-950/80 mt-0.5">
+                    <p className="text-sm font-semibold text-amber-950/80 mt-1">
                       {t('templeAddress')}
                     </p>
-                    <p className="text-[7px] font-semibold text-amber-950/80">
+                    <p className="text-sm font-semibold text-amber-950/80">
                       {t('templeContact')}
                     </p>
-                    <p className="text-[7px] font-bold text-red-900 mt-0.5">
+                    <p className="text-sm font-bold text-red-900 mt-2">
                       {t('panCard')}
                     </p>
-                    <p className="text-[6px] text-amber-950/60 mt-0.5">
+                    <p className="text-[11px] text-amber-950/60 mt-0.5">
                       {t('exemptNo')}
                     </p>
                   </div>
                 </div>
 
-                {/* Clean Centered Receipt Title */}
-                <div className="text-center text-[10px] font-bold tracking-widest text-red-800 border-y border-red-800/20 my-2.5 py-0.5 uppercase">
+                {/* Receipt Title */}
+                <div className="text-center text-xl font-bold tracking-widest text-red-800 border-y border-red-800/20 my-6 py-2 uppercase">
                   {t('receiptTitle')}
                 </div>
               </div>
 
-              {/* =========================================
-                  STRICT TWO-COLUMN RECEIPT BODY 
-                  ========================================= */}
-              <div className="flex flex-row w-full relative z-10 px-2 text-[9px] font-medium mt-1 flex-grow pb-2">
+              {/* --- RECEIPT BODY (Strict Two-Column) --- */}
+              <div className="flex flex-row w-full relative z-10 text-lg font-medium flex-grow gap-6 mb-6">
                 
-                {/* LEFT COLUMN (65% Width) */}
-                <div className="flex flex-col w-[65%] h-full pr-4">
-                  <div className="flex flex-col space-y-2.5">
-                    <div className="flex">
-                      <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('receiptNoLabel')}</span>
-                      <span className="font-bold">: RT-2026-08492</span>
-                    </div>
-                    <div className="flex">
-                      <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('receivedFromLabel')}</span>
-                      <span className="font-bold">: Vikas Vishwakarma</span>
-                    </div>
-                    <div className="flex">
-                      <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('addressLabel')}</span>
-                      <span className="font-bold">: Raipur, Chhattisgarh</span>
-                    </div>
-                    <div className="flex">
-                      <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('donationTypeLabel')}</span>
-                      <span className="font-bold uppercase">: {t('jyotTitle')}</span>
-                    </div>
-                    <div className="flex">
-                      <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('mobNoLabel')}</span>
-                      <span className="font-bold">: +91 XXXXX XXXXX</span>
-                    </div>
-                    <div className="flex">
-                      <span className="w-36 text-amber-900/70 font-semibold shrink-0">{t('sumOfRupeesLabel')}</span>
-                      <span className="font-bold italic">: {t('amountInWords')}</span>
-                    </div>
+                {/* LEFT COLUMN (65%) */}
+                <div className="flex flex-col w-[65%] h-full pr-6 space-y-4">
+                  <div className="flex items-center">
+                    <span className="w-45 text-amber-900/70 font-semibold shrink-0">{t('receiptNoLabel')}</span>
+                    <span className="font-bold">: RT-2026-08492</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="w-45 text-amber-900/70 font-semibold shrink-0">{t('receivedFromLabel')}</span>
+                    <span className="font-bold">: Vikas Vishwakarma</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="w-45 text-amber-900/70 font-semibold shrink-0">{t('addressLabel')}</span>
+                    <span className="font-bold">: Raipur, Chhattisgarh</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="w-45 text-amber-900/70 font-semibold shrink-0">{t('donationTypeLabel')}</span>
+                    <span className="font-bold uppercase">: {t('jyotTitle')}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="w-45 text-amber-900/70 font-semibold shrink-0">{t('mobNoLabel')}</span>
+                    <span className="font-bold">: +91 XXXXX XXXXX</span>
+                  </div>
+                  <div className="flex items-start mt-2">
+                    <span className="w-45 text-amber-900/70 font-semibold shrink-0">{t('sumOfRupeesLabel')}</span>
+                    <span className="font-bold italic leading-snug text-[16px]">: {t('amountInWords')}</span>
                   </div>
 
-                  {/* Bottom row of Left Column: Amount & Signature */}
-                  <div className="mt-auto flex justify-between items-end w-full">
-                    <div className="text-lg font-bold text-amber-950 flex items-end">
+                  {/* Amount & Signature */}
+                  <div className="mt-auto pt-10 flex justify-between items-end w-full">
+                    <div className="text-4xl font-bold text-amber-950">
                       ₹ 2,100/-
-                    </div>
-                    {/* Signature moved to the bottom right of the left column */}
-                    <div className="flex flex-col items-center">
-                      <div className="w-32 h-px bg-amber-900/40 mb-1"></div>
-                      <span className="text-[7px] font-bold uppercase tracking-wider text-amber-900/70">{t('receiverSignature')}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* RIGHT COLUMN (35% Width) */}
-                <div className="flex flex-col w-[35%] pl-2 h-full">
-                  <div className="flex flex-col space-y-2.5">
-                    <div className="flex">
-                      <span className="w-14 text-amber-900/70 font-semibold shrink-0">{t('dateLabel')}</span>
-                      <span className="font-bold">: {currentDate}</span>
-                    </div>
-                    <div className="flex">
-                      <span className="w-14 text-amber-900/70 font-semibold shrink-0">{t('jyotNoLabel')}</span>
-                      <span className="font-bold">: #1244</span>
-                    </div>
-                    <div className="flex">
-                      <span className="w-14 text-amber-900/70 font-semibold shrink-0">{t('panNoLabel')}</span>
-                      <span className="font-bold">: XXXXXXXXXX</span>
-                    </div>
+                {/* RIGHT COLUMN (35%) */}
+                <div className="flex flex-col w-[35%] pl-6 border-l border-amber-900/10 h-full space-y-4">
+                  <div className="flex justify-between gap-4">
+                    <span className="text-amber-900/70 font-semibold shrink-0">{t('dateLabel')}</span>
+                    <span className="font-bold">: {currentDate}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-amber-900/70 font-semibold shrink-0">{t('jyotNoLabel')}</span>
+                    <span className="font-bold">: #1244</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-amber-900/70 font-semibold shrink-0">{t('panNoLabel')}</span>
+                    <span className="font-bold">: XXXXXXXXXX</span>
                   </div>
                   
-                  {/* Increased QR Code perfectly filling the bottom space */}
-                  <div className="flex flex-col items-start mt-2 flex-grow justify-end pb-1">
-                    <div className="w-28 h-28 border border-black bg-white p-1.5 flex items-center justify-center">
+                  {/* QR Code */}
+                  <div className="flex flex-col items-end mt-auto flex-grow justify-end pb-2">
+                    <div className="w-36 h-36 border-2 border-black bg-white p-2 flex items-center justify-center">
                       <svg className="w-full h-full text-black" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M4 4h4v4H4V4zm2 2v-2h-2v2h2zm8-2h4v4h-4V4zm2 2v-2h-2v2h2zM4 14h4v4H4v-4zm2 2v-2h-2v2h2zm6-2h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4-4h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2z" />
                       </svg>
@@ -255,51 +264,48 @@ export default function ReceiptPage() {
               </div>
 
               {/* --- DARSHAN ENTRY & TERMS --- */}
-              <div className="w-full flex flex-col border-t border-amber-900/10 pt-1.5 shrink-0 relative z-10">
+              <div className="w-full flex flex-col border-t border-amber-900/10 pt-4 shrink-0 relative z-10">
                 <div className="flex justify-between items-center">
-                  <div className=" font-bold text-[8px] px-2 py-0.5 ">
-                    <span className="uppercase mr-1">{t('darshanEntryLabel')}</span> {t('darshanValidText')}
+                  <div className="font-bold text-sm w-[500px]">
+                    <span className="uppercase mr-2 text-red-800">{t('darshanEntryLabel')}</span> {t('darshanValidText')}
                   </div>
-                  <div className="text-[7px] font-bold text-amber-950/70 italic">
+                  <div className="text-sm font-bold text-amber-950/70 italic">
                     {t('carryReceiptNote')}
                   </div>
-                </div>
-                <div className="text-[5px] text-amber-900/40 text-right mt-1 uppercase tracking-widest">
-                  {t('termsApplied')}
                 </div>
               </div>
 
             </div>
           </div>
         </div>
-
-        {/* Action Buttons - Adjusted to flex-col on mobile to prevent overflow */}
-        <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[640px] print:hidden shrink-0">
-          <button 
-            onClick={() => window.print()}
-            className="flex-1 py-3 sm:py-2.5 bg-gradient-to-r from-orange-600 to-amber-600 text-white font-bold text-sm tracking-widest uppercase rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-            {t('printBtn')}
-          </button>
-
-          <button 
-            onClick={handleDownload}
-            className="flex-1 py-3 sm:py-2.5 bg-white border border-orange-600 text-orange-700 font-bold text-sm tracking-widest uppercase rounded-lg shadow-sm hover:bg-orange-50 transition-all flex items-center justify-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            {t('downloadBtn')}
-          </button>
-          
-          <button 
-            onClick={() => router.push("/")}
-            className="flex-1 py-3 sm:py-2.5 bg-white border border-amber-600 text-amber-700 font-bold text-sm tracking-widest uppercase rounded-lg hover:bg-amber-50 transition-all flex items-center justify-center gap-2"
-          >
-            {t('homeBtn')}
-          </button>
-        </div>
-
       </div>
+
+      {/* Action Buttons (Stacked on Mobile, Side-by-Side on Desktop) */}
+      <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[850px] print:hidden shrink-0">
+        <button 
+          onClick={() => window.print()}
+          className="flex-1 py-4 bg-gradient-to-r from-orange-600 to-amber-600 text-white font-bold text-sm tracking-widest uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+          {t('printBtn')}
+        </button>
+
+        <button 
+          onClick={handleDownload}
+          className="flex-1 py-4 bg-white border border-orange-600 text-orange-700 font-bold text-sm tracking-widest uppercase rounded-xl shadow-sm hover:bg-orange-50 transition-all flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          {t('downloadBtn')}
+        </button>
+        
+        <button 
+          onClick={() => router.push("/")}
+          className="flex-1 py-4 bg-white border border-amber-600 text-amber-700 font-bold text-sm tracking-widest uppercase rounded-xl hover:bg-amber-50 transition-all flex items-center justify-center gap-2"
+        >
+          {t('homeBtn')}
+        </button>
+      </div>
+
     </div>
   );
 }
