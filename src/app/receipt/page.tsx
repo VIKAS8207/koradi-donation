@@ -89,7 +89,7 @@ export default function ReceiptPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-3 md:p-8 relative z-10 w-full min-h-[100dvh] font-sans bg-zinc-100 overflow-hidden">
+    <div className="flex flex-col items-center justify-center p-3 md:p-8 relative z-10 w-full min-h-[100dvh] font-sans bg-[#FDF9F5] overflow-hidden">
       
       {/* Bulletproof Print CSS */}
       <style dangerouslySetInnerHTML={{__html: `
