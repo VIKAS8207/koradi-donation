@@ -43,7 +43,7 @@ export const en = {
   transactionSuccess: "Transaction Successful! Your receipt has been generated.",
   regNo: "Reg. No. A-533 (NGP)",
   
-  templeAddress: "Dist. Nagpur - 441111, M.: 9607979555/333/111",
+  templeAddress: "Dist. Nagpur - 441111, M.: 9607979333",
   templeContact: "website: www.koraditemple.com, E-mail: koraditemple@gmail.com",
   panCard: "PAN: AACTS5663H",
   exemptNo: "No. PN / CIT (EXEMPT.) / TECH/80G/720/2017-18/580",

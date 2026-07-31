@@ -10,11 +10,17 @@ export default function ReceiptPage() {
   const { t } = useLanguage();
   const [currentDate, setCurrentDate] = useState("");
   
+  // --- SINGLE SOURCE OF TRUTH FOR WIDTH ---
+  const RECEIPT_WIDTH = 1050;
+
   // Scaling State
   const [scale, setScale] = useState(1);
   const [wrapperHeight, setWrapperHeight] = useState("auto");
   const containerRef = useRef<HTMLDivElement>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
+  
+  // Success Popup State
+  const [showSuccess, setShowSuccess] = useState(true);
 
   useEffect(() => {
     // Generate the current date in the traditional format
@@ -24,27 +30,30 @@ export default function ReceiptPage() {
       month: 'short',
       year: 'numeric'
     }));
+
+    // Auto-hide the success message after 4 seconds
+    const timer = setTimeout(() => {
+      setShowSuccess(false);
+    }, 4000);
+    return () => clearTimeout(timer);
   }, []);
 
-  // --- Dynamic Scaling Logic to fit screen without ANY scrolling ---
+  // --- Dynamic Scaling Logic to fit screen perfectly ---
   useLayoutEffect(() => {
     const updateScale = () => {
       if (containerRef.current && receiptRef.current) {
-        // Target fixed width of our receipt
-        const TARGET_WIDTH = 850; 
-        
         // 1. Available width in the parent container
         const availableWidth = containerRef.current.clientWidth;
         
         // 2. Available height on the screen 
-        // (Viewport height minus ~250px to leave room for paddings, success message, and buttons)
-        const availableHeight = window.innerHeight - 250;
+        // (Viewport height minus padding and buttons space)
+        const availableHeight = window.innerHeight - 200;
         
         // 3. True unscaled height of the receipt
         const unscaledHeight = receiptRef.current.offsetHeight;
 
-        // Calculate scales for both dimensions
-        const widthScale = availableWidth / TARGET_WIDTH;
+        // Calculate scales for both dimensions using the synced RECEIPT_WIDTH
+        const widthScale = availableWidth / RECEIPT_WIDTH;
         const heightScale = availableHeight / unscaledHeight;
 
         // Take the smallest scale to ensure it fits BOTH horizontally and vertically. Cap at 1 (100%).
@@ -89,7 +98,7 @@ export default function ReceiptPage() {
 
   return (
     // min-h-[100dvh] ensures it fits the mobile viewport perfectly
-    <div className="flex flex-col items-center justify-center p-4 md:p-8 relative z-10 w-full min-h-[100dvh] font-sans bg-zinc-50 overflow-hidden">
+    <div className="flex flex-col items-center justify-center p-4 md:p-8 relative z-10 w-full min-h-[100dvh] font-sans bg-[#FDF9F5] overflow-hidden">
       
       {/* Bulletproof Print CSS */}
       <style dangerouslySetInnerHTML={{__html: `
@@ -113,8 +122,12 @@ export default function ReceiptPage() {
         }
       `}} />
 
-      {/* Success Notification */}
-      <div className="w-full max-w-[850px] bg-green-50/90 backdrop-blur-md border border-green-200 rounded-xl p-3 flex items-center justify-center gap-3 shadow-sm print:hidden shrink-0 mb-4 md:mb-6">
+      {/* Success Notification (Smoothly fades out and collapses) */}
+      <div 
+        className={`w-full max-w-[1050px] bg-green-50/90 backdrop-blur-md border border-green-200 rounded-xl flex items-center justify-center gap-3 shadow-sm print:hidden shrink-0 transition-all duration-700 ease-in-out ${
+          showSuccess ? 'p-3 mb-4 md:mb-6 opacity-100 max-h-20' : 'p-0 mb-0 opacity-0 max-h-0 border-none overflow-hidden'
+        }`}
+      >
         <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center shrink-0">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
@@ -126,7 +139,7 @@ export default function ReceiptPage() {
       </div>
 
       {/* --- SCALING WRAPPER --- */}
-      <div ref={containerRef} className="w-full max-w-[850px] flex justify-center">
+      <div ref={containerRef} className="w-full max-w-[1050px] flex justify-center">
         {/* Height container prevents layout jumping/whitespace */}
         <div style={{ height: wrapperHeight, width: '100%', display: 'flex', justifyContent: 'center' }}>
           
@@ -134,12 +147,13 @@ export default function ReceiptPage() {
           <div style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }}>
             
             {/* =========================================
-                STRICT FIXED-PIXEL RECEIPT CANVAS
+                STRICT FIXED-PIXEL RECEIPT CANVAS (Synced to 1050)
                 ========================================= */}
             <div 
               id="receipt-canvas" 
               ref={receiptRef}
-              className="w-[850px] bg-[#FCF8EB] rounded-2xl shadow-2xl border border-red-800/20 relative overflow-hidden p-10 flex flex-col text-amber-950 shrink-0"
+              style={{ width: `${RECEIPT_WIDTH}px` }}
+              className="bg-[#FCF8EB] rounded-2xl shadow-2xl border border-red-800/20 relative overflow-hidden p-10 flex flex-col text-amber-950 shrink-0"
             >
               
               {/* Background Watermark */}
@@ -199,7 +213,7 @@ export default function ReceiptPage() {
               </div>
 
               {/* --- RECEIPT BODY (Strict Two-Column) --- */}
-              <div className="flex flex-row w-full relative z-10 text-lg font-medium flex-grow gap-6 mb-6">
+              <div className="flex flex-row w-full relative z-10 text-2xl font-medium flex-grow gap-6 mb-6">
                 
                 {/* LEFT COLUMN (65%) */}
                 <div className="flex flex-col w-[65%] h-full pr-6 space-y-4">
@@ -280,8 +294,8 @@ export default function ReceiptPage() {
         </div>
       </div>
 
-      {/* Action Buttons (Stacked on Mobile, Side-by-Side on Desktop) */}
-      <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[850px] print:hidden shrink-0">
+      {/* Action Buttons */}
+      <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[1050px] print:hidden shrink-0">
         <button 
           onClick={() => window.print()}
           className="flex-1 py-4 bg-gradient-to-r from-orange-600 to-amber-600 text-white font-bold text-sm tracking-widest uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
