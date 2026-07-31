@@ -203,32 +203,32 @@ export default function ReceiptPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col border-b border-amber-900/20 border-dotted pb-0.5">
                     <span className="text-[10px] md:text-xs text-amber-900/60 uppercase font-bold tracking-widest">{t('receiptNoLabel')}</span>
-                    <span className="text-[20px] md:text-2xl text-amber-950 font-bold leading-tight">RT-2026-08492</span>
+                    <span className="text-[19px] md:text-xl text-amber-950 font-bold leading-tight">RT-2026-08492</span>
                   </div>
                   <div className="flex flex-col border-b border-amber-900/20 border-dotted pb-0.5 items-end text-right">
                     <span className="text-[10px] md:text-xs text-amber-900/60 uppercase font-bold tracking-widest">{t('dateLabel')}</span>
-                    <span className="text-[20px] md:text-2xl text-amber-950 font-bold leading-tight">{currentDate}</span>
+                    <span className="text-[19px] md:text-xl text-amber-950 font-bold leading-tight">{currentDate}</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col border-b border-amber-900/20 border-dotted pb-0.5">
                   <span className="text-[10px] md:text-xs text-amber-900/60 uppercase font-bold tracking-widest">{t('receivedFromLabel')}</span>
-                  <span className="text-[20px] md:text-2xl text-amber-950 font-bold leading-tight truncate">Vikas Vishwakarma</span>
+                  <span className="text-[19px] md:text-xl text-amber-950 font-bold leading-tight truncate">Vikas Vishwakarma</span>
                 </div>
 
                 <div className="flex flex-col border-b border-amber-900/20 border-dotted pb-0.5">
                   <span className="text-[10px] md:text-xs text-amber-900/60 uppercase font-bold tracking-widest">{t('addressLabel')}</span>
-                  <span className="text-[20px] md:text-2xl text-amber-950 font-bold leading-tight truncate">Raipur, Chhattisgarh</span>
+                  <span className="text-[19px] md:text-xl text-amber-950 font-bold leading-tight truncate">Raipur, Chhattisgarh</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col border-b border-amber-900/20 border-dotted pb-0.5">
                     <span className="text-[10px] md:text-xs text-amber-900/60 uppercase font-bold tracking-widest">{t('donationTypeLabel')}</span>
-                    <span className="text-[20px] md:text-2xl text-amber-950 font-bold uppercase leading-tight truncate">{t('jyotTitle')}</span>
+                    <span className="text-[19px] md:text-xl text-amber-950 font-bold uppercase leading-tight truncate">{t('jyotTitle')}</span>
                   </div>
                   <div className="flex flex-col border-b border-amber-900/20 border-dotted pb-0.5 items-end text-right">
                     <span className="text-[10px] md:text-xs text-amber-900/60 uppercase font-bold tracking-widest">{t('jyotNoLabel')}</span>
-                    <span className="text-[20px] md:text-2xl text-amber-950 font-bold leading-tight">#1244</span>
+                    <span className="text-[19px] md:text-xl text-amber-950 font-bold leading-tight">#1244</span>
                   </div>
                 </div>
 
