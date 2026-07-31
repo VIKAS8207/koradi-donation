@@ -202,7 +202,7 @@ export default function ReceiptPage() {
               </div>
 
               {/* --- RECEIPT BODY (Responsive Col on Mobile, Row on Desktop) --- */}
-              <div className="flex flex-col md:flex-row w-full relative z-10 text-[11px] md:text-2xl font-medium flex-grow gap-4 md:gap-6 mb-4 md:mb-6">
+              <div className="flex flex-col md:flex-row w-full relative z-10 text-[30px] md:text-2xl font-medium flex-grow gap-4 md:gap-6 mb-4 md:mb-6">
                 
                 {/* LEFT COLUMN */}
                 <div className="flex flex-col w-full md:w-[65%] h-full md:pr-6 space-y-2 md:space-y-4">
