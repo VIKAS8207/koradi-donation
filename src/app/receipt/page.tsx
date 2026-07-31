@@ -213,7 +213,7 @@ export default function ReceiptPage() {
               </div>
 
               {/* --- RECEIPT BODY (Strict Two-Column) --- */}
-              <div className="flex flex-row w-full relative z-10 text-2xl font-medium flex-grow gap-6 mb-6">
+              <div className="flex flex-row w-full relative z-10 text-3xl font-medium flex-grow gap-6 mb-6">
                 
                 {/* LEFT COLUMN (65%) */}
                 <div className="flex flex-col w-[65%] h-full pr-6 space-y-4">
